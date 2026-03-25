@@ -1,0 +1,14 @@
+/* ─── fonts.css ──────────────────────────────────────────────────────────────
+   ONE place to control all typography across the entire portfolio.
+   To change fonts, edit the two lines below — nothing else needs touching.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=neue-montreal@300,400,500&display=swap');
+
+:root {
+  /* ↓↓ Change these two lines to restyle every page at once ↓↓ */
+  --font-display: 'Bebas Neue', sans-serif;   /* headings, titles, big text  */
+  --font-body:    'Neue Montreal', sans-serif; /* body, nav, labels, buttons  */
+}
