@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { eyebrowStyle, bodyStyle, smallBodyStyle, backLinkStyle } from '../styles/caseStudyStyles'
 import CaseStudyHero from './CaseStudyHero'
+import LazyVideo from './LazyVideo'
 import CaseStudyClosing from './CaseStudyClosing'
 import NextProjectLink from './NextProjectLink'
 import ProjectMeta from './ProjectMeta'
@@ -338,7 +339,7 @@ export default function BiometricParticlesCaseStudy() {
       <ProjectMeta
         sectionRef={metaRef}
         role="Creative Coding, Sensor Integration"
-        team={null}
+        team={['Anusha and Me']}
         timeline="2 days"
         tools={['TouchDesigner', 'Arduino', 'GSR Sensor']}
         context="Physical Computing project"
@@ -491,12 +492,8 @@ export default function BiometricParticlesCaseStudy() {
             ref={s4ImgRef}
             style={{ position: 'relative', flex: 1, overflow: 'hidden', minHeight: isCompact ? '70vh' : '100%' }}
           >
-            <video
+            <LazyVideo
               src={MEDIA.visualsVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
             />
           </div>

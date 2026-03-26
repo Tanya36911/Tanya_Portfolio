@@ -857,17 +857,17 @@ export default function InstallationCaseStudy() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
             <SplitWords
               paraRef={s8Para1Ref}
-              text="The junkyard stopped looking like waste. It started looking like a parts catalogue — things that already had a shape, already had a purpose they had not found yet."
+              text="The junkyard stopped looking like waste. It started looking like a parts catalogue. Things that already had a shape, already had a purpose they had not found yet."
               style={{ ...bodyStyle, fontSize: 'clamp(18px, 1.8vw, 24px)', color: 'rgba(255,255,255,0.75)' }}
             />
             <SplitWords
               paraRef={s8Para2Ref}
-              text="The hardest part was not the Arduino. It was trusting that simple was enough. A joystick. Five flowers. One lights up. I kept wanting to add more until I realised the restraint was the design."
+              text="The hardest part was not the Arduino. It was trusting that simple was enough. A joystick. three flowers. One lights up. I kept wanting to add more until I realised the restraint was the design."
               style={{ ...bodyStyle, fontSize: 'clamp(18px, 1.8vw, 24px)', color: 'rgba(255,255,255,0.75)' }}
             />
             <SplitWords
               paraRef={s8Para3Ref}
-              text="And watching someone pick up the joystick for the first time — not knowing what it does, moving it slowly, then seeing a flower glow — that is the part you cannot prototype."
+              text="And watching someone pick up the joystick for the first time, not knowing what it does, moving it slowly, then seeing a flower glow - that is the part you cannot prototype."
               style={{ ...bodyStyle, fontSize: 'clamp(18px, 1.8vw, 24px)', color: 'rgba(255,255,255,0.75)' }}
             />
           </div>

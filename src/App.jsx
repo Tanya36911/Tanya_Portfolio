@@ -9,6 +9,7 @@ import UrushyaCaseStudy from './components/UrushyaCaseStudy'
 import BiometricParticlesCaseStudy from './components/BiometricParticlesCaseStudy'
 import StatementSection from './components/StatementSection'
 import SkillsSection from './components/SkillsSection'
+import LoadingScreen from './components/LoadingScreen'
 import { CONTACT_DETAILS } from './content/siteContent'
 import './App.css'
 
@@ -124,70 +125,71 @@ export default function App() {
     return () => window.removeEventListener('popstate', syncPath)
   }, [])
 
+  let page
+
   if (pathname === '/work/installation') {
-    return <InstallationCaseStudy />
-  }
-
-  if (pathname === '/work/thermal-skin') {
-    return <ThermalSkinCaseStudy />
-  }
-
-  if (pathname === '/work/morpho') {
-    return <MorphoCaseStudy />
-  }
-
-  if (pathname === '/work/urushya') {
-    return <UrushyaCaseStudy />
-  }
-
-  if (pathname === '/work/biometric-particles') {
-    return <BiometricParticlesCaseStudy />
+    page = <InstallationCaseStudy />
+  } else if (pathname === '/work/thermal-skin') {
+    page = <ThermalSkinCaseStudy />
+  } else if (pathname === '/work/morpho') {
+    page = <MorphoCaseStudy />
+  } else if (pathname === '/work/urushya') {
+    page = <UrushyaCaseStudy />
+  } else if (pathname === '/work/biometric-particles') {
+    page = <BiometricParticlesCaseStudy />
+  } else {
+    page = (
+      <main className="app">
+        <a
+          href="#about"
+          style={{
+            position: 'absolute',
+            left: '-9999px',
+            top: 'auto',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden',
+            zIndex: 1000,
+            padding: '12px 16px',
+            borderRadius: 999,
+            background: 'var(--bg-dark)',
+            color: '#ffffff',
+            fontFamily: 'var(--font-body)',
+            fontSize: 12,
+            letterSpacing: '0.06em',
+            textDecoration: 'none',
+          }}
+          onFocus={(e) => {
+            e.target.style.position = 'fixed'
+            e.target.style.left = '16px'
+            e.target.style.top = '16px'
+            e.target.style.width = 'auto'
+            e.target.style.height = 'auto'
+          }}
+          onBlur={(e) => {
+            e.target.style.position = 'absolute'
+            e.target.style.left = '-9999px'
+            e.target.style.top = 'auto'
+            e.target.style.width = '1px'
+            e.target.style.height = '1px'
+          }}
+        >
+          Skip to content
+        </a>
+        <Hero />
+        <StatementSection />
+        <AboutSection />
+        <WorksSectionCopy />
+        <SkillsSection />
+        <ContactSection />
+      </main>
+    )
   }
 
   return (
-    <main className="app">
-      <a
-        href="#about"
-        style={{
-          position: 'absolute',
-          left: '-9999px',
-          top: 'auto',
-          width: '1px',
-          height: '1px',
-          overflow: 'hidden',
-          zIndex: 1000,
-          padding: '12px 16px',
-          borderRadius: 999,
-          background: 'var(--bg-dark)',
-          color: '#ffffff',
-          fontFamily: 'var(--font-body)',
-          fontSize: 12,
-          letterSpacing: '0.06em',
-          textDecoration: 'none',
-        }}
-        onFocus={(e) => {
-          e.target.style.position = 'fixed'
-          e.target.style.left = '16px'
-          e.target.style.top = '16px'
-          e.target.style.width = 'auto'
-          e.target.style.height = 'auto'
-        }}
-        onBlur={(e) => {
-          e.target.style.position = 'absolute'
-          e.target.style.left = '-9999px'
-          e.target.style.top = 'auto'
-          e.target.style.width = '1px'
-          e.target.style.height = '1px'
-        }}
-      >
-        Skip to content
-      </a>
-      <Hero />
-      <StatementSection />
-      <AboutSection />
-      <WorksSectionCopy />
-      <SkillsSection />
-      <ContactSection />
-    </main>
+    <>
+      <LoadingScreen />
+      {page}
+    </>
   )
 }

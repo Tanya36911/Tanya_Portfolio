@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { BookOpen, Coins, Users, BarChart2, Gamepad2, Gift } from 'lucide-react'
 import { eyebrowStyle, bodyStyle, backLinkStyle } from '../styles/caseStudyStyles'
 import CaseStudyHero from './CaseStudyHero'
+import LazyVideo from './LazyVideo'
 import CaseStudyClosing from './CaseStudyClosing'
 import NextProjectLink from './NextProjectLink'
 import ProjectMeta from './ProjectMeta'
@@ -713,9 +714,8 @@ export default function UrushyaCaseStudy() {
               boxShadow: '0 40px 80px rgba(0,0,0,0.6)',
               flexShrink: 0,
             }}>
-              <video
+              <LazyVideo
                 src={MEDIA.onboarding}
-                muted loop autoPlay playsInline
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
@@ -780,7 +780,7 @@ export default function UrushyaCaseStudy() {
                   )}
                   {title === 'Smart Financial Tools' && (
                     <div style={{ overflow: 'hidden', position: 'relative' }}>
-                      <video src={MEDIA.smart} muted loop autoPlay playsInline style={{ width: '32%', display: 'block', margin: '20px auto 0' }} />
+                      <LazyVideo src={MEDIA.smart} style={{ width: '32%', display: 'block', margin: '20px auto 0' }} />
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(22,22,28,0.8) 75%, rgba(22,22,28,1) 100%)', pointerEvents: 'none' }} />
                     </div>
                   )}
@@ -853,7 +853,7 @@ export default function UrushyaCaseStudy() {
                 {/* Smart Financial Tools */}
                 <div ref={setS6Card(5)} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, overflow: 'hidden', opacity: 0 }}>
                   <div style={{ overflow: 'hidden', position: 'relative' }}>
-                    <video src={MEDIA.smart} muted loop autoPlay playsInline style={{ width: '50%', display: 'block', margin: '24px auto 0' }} />
+                    <LazyVideo src={MEDIA.smart} style={{ width: '50%', display: 'block', margin: '24px auto 0' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(22,22,28,0.8) 75%, rgba(22,22,28,1) 100%)', pointerEvents: 'none' }} />
                   </div>
                   <div style={{ padding: 'clamp(20px, 2.5vw, 32px)' }}>

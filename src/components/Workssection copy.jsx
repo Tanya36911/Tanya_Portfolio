@@ -50,7 +50,7 @@ function ScatteredCard({ project, index, activeIndex, onScrollTo }) {
       {project.video ? (
         <video
           src={project.video}
-          muted loop autoPlay playsInline
+          muted loop autoPlay playsInline preload="none"
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: project.videoFit || 'cover',
@@ -159,6 +159,7 @@ function CardGLB({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRef,
   const activeTexRef    = useRef(null)
   const activeVidRef    = useRef(null)
   const activeCanvasRaf = useRef(null)
+  const initialLoadRef  = useRef(false)
 
   // Cleanup canvas RAF + video on unmount
   useEffect(() => () => {
@@ -218,9 +219,8 @@ function CardGLB({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRef,
       const img      = new Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => {
-        ctx.fillStyle = '#000000'
-        ctx.fillRect(0, 0, CANVAS_W, CANVAS_H)
-        const scale = Math.min(CANVAS_W / img.naturalWidth, CANVAS_H / img.naturalHeight)
+        // Cover-fit: fill the entire card face, crop edges rather than letterbox
+        const scale = Math.max(CANVAS_W / img.naturalWidth, CANVAS_H / img.naturalHeight)
         const dw = img.naturalWidth  * scale
         const dh = img.naturalHeight * scale
         const dx = (CANVAS_W - dw) / 2
@@ -383,7 +383,15 @@ function CardGLB({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRef,
     groupRef.current.scale.setScalar(scaleV.current)
 
     const src = mediaSrcRef.current
-    if (src && src !== activeSrcRef.current && !flip.active) { activeSrcRef.current = src; loadTexture(src) }
+    if (src && src !== activeSrcRef.current && !flip.active) {
+      activeSrcRef.current = src
+      if (!initialLoadRef.current) {
+        initialLoadRef.current = true
+        setTimeout(() => loadTexture(mediaSrcRef.current ?? src), 500)
+      } else {
+        loadTexture(src)
+      }
+    }
   })
 
   return (
@@ -401,6 +409,7 @@ function CardGLB({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRef,
 // CardShell — glow blobs now use the active project's accent colour
 // ---------------------------------------------------------------------------
 function CardShell({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRef, accentRef, accent }) {
+  const shadowMapSize = typeof window !== 'undefined' && window.innerWidth <= 900 ? 1024 : 2048
   return (
     <div style={{ position: 'relative', width: 430, height: 600 }}>
       {/* Dual glow driven by project accent instead of hardcoded cyan/violet */}
@@ -434,7 +443,7 @@ function CardShell({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRe
         <ambientLight intensity={0.5} />
         <directionalLight
           position={[2.6, 2.2, 3.2]} intensity={2.2} color="#ffffff" castShadow
-          shadow-mapSize-width={2048} shadow-mapSize-height={2048}
+          shadow-mapSize-width={shadowMapSize} shadow-mapSize-height={shadowMapSize}
           shadow-camera-near={0.1} shadow-camera-far={20}
           shadow-camera-left={-6} shadow-camera-right={6}
           shadow-camera-top={6} shadow-camera-bottom={-6}
@@ -450,6 +459,16 @@ function CardShell({ mediaSrcRef, videoBgRef, videoFitRef, mouseRef, flipStateRe
       </Canvas>
     </div>
   )
+}
+
+// Returns the accent if it's bright enough to read on a dark bg; otherwise a fallback neutral
+function visibleAccent(hex) {
+  if (!hex || !hex.startsWith('#') || hex.length < 7) return 'rgba(244,240,235,0.8)'
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255
+  return lum < 0.25 ? 'rgba(244,240,235,0.82)' : hex
 }
 
 // ---------------------------------------------------------------------------
@@ -537,7 +556,7 @@ function MobileWorksSection() {
               <div style={{
                 width: 32,
                 height: 2,
-                background: project.accent,
+                background: visibleAccent(project.accent),
                 borderRadius: 999,
                 marginBottom: 12,
               }} />
@@ -547,7 +566,7 @@ function MobileWorksSection() {
                 fontSize: 10,
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: project.accent,
+                color: visibleAccent(project.accent),
                 marginBottom: 6,
               }}>
                 {project.num} — {project.category}
@@ -585,8 +604,8 @@ function MobileWorksSection() {
                       fontSize: 9,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: index % 2 === 0 ? project.accent : 'rgba(244,240,235,0.58)',
-                      border: `1px solid ${index % 2 === 0 ? `${project.accent}66` : 'rgba(244,240,235,0.18)'}`,
+                      color: index % 2 === 0 ? visibleAccent(project.accent) : 'rgba(244,240,235,0.58)',
+                      border: `1px solid ${index % 2 === 0 ? `${visibleAccent(project.accent)}66` : 'rgba(244,240,235,0.18)'}`,
                       borderRadius: 4,
                       padding: '4px 10px',
                     }}
@@ -605,13 +624,13 @@ function MobileWorksSection() {
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase',
                     color: '#f4f0eb',
-                    background: project.accent,
+                    background: visibleAccent(project.accent),
                     borderRadius: 999,
                     padding: '11px 24px',
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    boxShadow: `0 8px 24px ${project.accent}55`,
+                    boxShadow: `0 8px 24px ${visibleAccent(project.accent)}55`,
                   }}
                 >
                   {project.cta ?? 'View Details'}
@@ -656,6 +675,7 @@ export default function WorksSection() {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [scrollFrac,  setScrollFrac]  = useState(0)
+  const [canvasReady, setCanvasReady] = useState(false)
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined'
       ? window.matchMedia('(max-width: 900px)').matches
@@ -678,6 +698,17 @@ export default function WorksSection() {
     mediaQuery.addListener(onChange)
     return () => mediaQuery.removeListener(onChange)
   }, [])
+
+  // Defer Canvas mount until section is near viewport
+  useEffect(() => {
+    if (isMobile) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setCanvasReady(true); observer.disconnect() } },
+      { rootMargin: '200px' }
+    )
+    if (sectionRef.current) observer.observe(sectionRef.current)
+    return () => observer.disconnect()
+  }, [isMobile])
 
   useEffect(() => {
     if (isMobile) {
@@ -803,14 +834,18 @@ export default function WorksSection() {
           onMouseLeave={handleMouseLeave}
           style={{ flex: '0 0 640px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'translateX(-30px)' }}
         >
-          <CardShell
-            mediaSrcRef={mediaSrcRef}
-            videoBgRef={videoBgRef}
-            videoFitRef={videoFitRef}
-            mouseRef={mouseRef}
-            flipStateRef={flipStateRef}
-            accent={project.accent}
-          />
+          {canvasReady ? (
+            <CardShell
+              mediaSrcRef={mediaSrcRef}
+              videoBgRef={videoBgRef}
+              videoFitRef={videoFitRef}
+              mouseRef={mouseRef}
+              flipStateRef={flipStateRef}
+              accent={project.accent}
+            />
+          ) : (
+            <div style={{ width: 430, height: 600 }} />
+          )}
         </div>
 
         {/* RIGHT — info panel */}

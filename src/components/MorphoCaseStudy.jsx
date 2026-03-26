@@ -943,7 +943,9 @@ export default function MorphoCaseStudy() {
             outputs a pattern you can actually make.
           </p>
 
-          <S6Link elRef={setS6Ele(3)} />
+          <div ref={setS6Ele(3)} style={{ opacity: 0, display: 'inline-block' }}>
+            <S6Link />
+          </div>
 
           <p
             ref={setS6Ele(4)}
@@ -1119,11 +1121,10 @@ export default function MorphoCaseStudy() {
 }
 
 // ── S6 link — extracted to avoid inline ref + state on the same element ──────
-function S6Link({ elRef }) {
+function S6Link() {
   const [hovered, setHovered] = useState(false)
   return (
     <a
-      ref={elRef}
       href="https://morpho.streamlit.app"
       target="_blank"
       rel="noopener noreferrer"
@@ -1137,7 +1138,6 @@ function S6Link({ elRef }) {
         background: hovered ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
         borderColor: hovered ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.4)',
         transition: 'all 0.2s ease',
-        opacity: 0,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

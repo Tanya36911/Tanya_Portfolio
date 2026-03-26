@@ -168,8 +168,8 @@ export default function StatementSection() {
         </div>
 
         <a
-          href="/resume.pdf"
-          download
+          href="/Tanya%20Resume.pdf"
+          download="Tanya Resume.pdf"
           className="pill-btn"
           style={{
             fontFamily:      'var(--font-body)',
