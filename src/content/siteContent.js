@@ -24,7 +24,7 @@ export const CONTACT_DETAILS = {
   links: [
     { label: 'tanyajustin123@gmail.com', href: 'mailto:tanyajustin123@gmail.com', type: 'email' },
     { label: '+91 861 851 7903',          href: 'tel:+918618517903',               type: 'phone' },
-    { label: 'linkedin.com/in/tanya-michelle', href: 'https://linkedin.com/in/tanya-michelle', type: 'linkedin' },
+    { label: 'linkedin.com/in/tanya-justin', href: 'https://www.linkedin.com/in/tanya-justin', type: 'linkedin' },
     { label: 'github.com/Tanya36911',     href: 'https://github.com/Tanya36911',   type: 'github' },
     { label: '@t.artttttt',               href: 'https://instagram.com/t.artttttt', type: 'instagram' },
   ],
