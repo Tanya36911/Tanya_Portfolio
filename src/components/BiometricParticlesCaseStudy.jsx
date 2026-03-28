@@ -573,8 +573,8 @@ export default function BiometricParticlesCaseStudy() {
           <div style={{ paddingTop: isCompact ? 0 : 8 }}>
             {[
               { label: 'Calm (0.0)', value: 'Slow velocity, wide spread, cool hue' },
-              { label: 'Neutral (0.5)', value: 'Medium velocity, balanced spread, white' },
-              { label: 'Stress (1.0)', value: 'Fast velocity, tight spread, warm hue' },
+              { label: 'Neutral (0.5)', value: 'Medium velocity, balanced spread, purple' },
+              { label: 'Stress (1.0)', value: 'Fast velocity, tight spread, red' },
             ].map(({ label, value }, i) => (
               <div
                 key={label}

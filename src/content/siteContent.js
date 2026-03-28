@@ -128,7 +128,7 @@ export const PROJECTS = [
     num: '03',
     title: URUSHYA_CASE_STUDY.title,
     category: 'Product Design · UX',
-    year: '2025',
+    year: '2024',
     description:
       'A financial literacy app for young adults in India. Pre-test, bite-sized courses, coin-based mentorship, and a built-in budgeting tool — from zero knowledge to applied confidence.',
     tags: ['Product Design', 'UX Research', 'Mobile App', 'Financial Literacy'],
@@ -158,7 +158,7 @@ export const PROJECTS = [
     num: '06',
     title: 'Biometric Particles',
     category: 'Creative Coding · Interaction',
-    year: '2024',
+    year: '2026',
     description:
       'A real-time particle system driven by live GSR sensor data — stress made visible. Each spike in skin conductance sends the field into turbulence.',
     tags: ['TouchDesigner', 'Arduino', 'Generative Art', 'Physical Computing'],
