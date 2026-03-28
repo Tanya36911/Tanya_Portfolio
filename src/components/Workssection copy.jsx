@@ -704,7 +704,7 @@ export default function WorksSection() {
     if (isMobile) return
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setCanvasReady(true); observer.disconnect() } },
-      { rootMargin: '200px' }
+      { rootMargin: '800px' }
     )
     if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
