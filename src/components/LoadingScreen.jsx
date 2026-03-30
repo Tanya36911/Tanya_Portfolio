@@ -165,7 +165,7 @@ export default function LoadingScreen() {
       if (phase === 'LOADING') {
         loadTimer += 1
         const loadingFrames = prefersReducedMotion ? 32 : 140
-        if (loadTimer > loadingFrames) phase = 'CONVERGING'
+        if (loadTimer > loadingFrames && glbsLoadedRef.current) phase = 'CONVERGING'
       } else if (phase === 'CONVERGING') {
         convergeTimer = Math.min(convergeTimer + (prefersReducedMotion ? 0.08 : 0.03), 1)
         if (convergeTimer >= 1) phase = 'EXPLODING'
@@ -209,7 +209,10 @@ export default function LoadingScreen() {
     if (windowLoadedRef.current && glbsLoadedRef.current) requestExit()
     animationId = window.requestAnimationFrame(frame)
 
-    const onLoadComplete = () => { if (glbsLoadedRef.current) requestExit() }
+    const onLoadComplete = () => {
+      windowLoadedRef.current = true  // sync update — don't wait for useEffect
+      if (glbsLoadedRef.current) requestExit()
+    }
     window.addEventListener('load', onLoadComplete)
 
 
