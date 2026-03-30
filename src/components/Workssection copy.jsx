@@ -674,7 +674,7 @@ export default function WorksSection() {
   const flipStateRef = useRef({ pending: false })
 
   const [activeIndex, setActiveIndex] = useState(0)
-  const [scrollFrac,  setScrollFrac]  = useState(0)
+  const progressBarRef = useRef(null)
   const [canvasReady, setCanvasReady] = useState(false)
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined'
@@ -711,17 +711,17 @@ export default function WorksSection() {
   }, [isMobile])
 
   useEffect(() => {
-    if (isMobile) {
-      setScrollFrac(0)
-      return undefined
-    }
+    if (isMobile) return undefined
 
     function onScroll() {
       const section = sectionRef.current
       if (!section) return
       const travel = Math.max(1, section.offsetHeight - window.innerHeight)
       const frac   = Math.max(0, Math.min(1, (window.scrollY - section.offsetTop) / travel))
-      setScrollFrac(frac)
+
+      // Mutate the progress bar directly — no React re-render on every scroll tick
+      if (progressBarRef.current) progressBarRef.current.style.width = `${frac * 100}%`
+
       const next = Math.min(PROJECTS.length - 1, Math.round(frac * (PROJECTS.length - 1)))
       if (next === activeIdxRef.current) return
       activeIdxRef.current   = next
@@ -771,9 +771,9 @@ export default function WorksSection() {
 
         {/* Iridescent progress bar */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 20 }}>
-          <div style={{
+          <div ref={progressBarRef} style={{
             position: 'absolute', top: 0, left: 0, height: 2,
-            width: `${scrollFrac * 100}%`,
+            width: '0%',
             backgroundImage: `linear-gradient(90deg, ${project.accent}, #BF5FFF, ${project.accent})`,
             backgroundSize: '200% auto',
             animation: 'holoShift 4s ease infinite',
