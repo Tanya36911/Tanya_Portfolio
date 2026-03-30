@@ -104,20 +104,27 @@ export default function LoadingScreen() {
     let exitRequested = windowLoadedRef.current && glbsLoadedRef.current
     let disposed = false
 
-    // Hook into THREE's DefaultLoadingManager, which tracks all useGLTF preloads.
-    // Only allow the loading screen to exit once every GLB fetch has finished.
-    const mgr = THREE.DefaultLoadingManager
-    const prevMgrOnLoad = mgr.onLoad
-    if (mgr.itemsTotal === 0 || mgr.itemsLoaded >= mgr.itemsTotal) {
-      // Nothing pending — treat GLBs as ready immediately
+    // Fetch all GLBs directly so they land in the browser HTTP cache.
+    // When Three.js / drei later request the same URLs they get instant cache
+    // hits — no dependency on THREE.DefaultLoadingManager or drei internals.
+    const GLB_URLS = [
+      '/models/starcard.glb',
+      '/models/letter_T.glb',
+      '/models/letter_A.glb',
+      '/models/letter_N.glb',
+      '/models/letter_Y.glb',
+      '/models/letter_A2.glb',
+    ]
+    Promise.all(GLB_URLS.map((url) => fetch(url))).then(() => {
+      if (disposed) return
       glbsLoadedRef.current = true
-    } else {
-      mgr.onLoad = () => {
-        glbsLoadedRef.current = true
-        if (windowLoadedRef.current) requestExit()
-        if (prevMgrOnLoad) prevMgrOnLoad()
-      }
-    }
+      if (windowLoadedRef.current) requestExit()
+    }).catch(() => {
+      // If any fetch fails, don't block the loading screen forever
+      if (disposed) return
+      glbsLoadedRef.current = true
+      if (windowLoadedRef.current) requestExit()
+    })
 
     function onMouseMove(event) {
       mouseX = event.clientX - window.innerWidth / 2
@@ -205,13 +212,13 @@ export default function LoadingScreen() {
     const onLoadComplete = () => { if (glbsLoadedRef.current) requestExit() }
     window.addEventListener('load', onLoadComplete)
 
+
     return () => {
       disposed = true
       window.cancelAnimationFrame(animationId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('load', onLoadComplete)
-      if (mgr.onLoad !== prevMgrOnLoad) mgr.onLoad = prevMgrOnLoad
 
       meshes.forEach((mesh) => scene.remove(mesh))
       geometry.dispose()
